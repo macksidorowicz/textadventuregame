@@ -73,37 +73,34 @@ import time
 playerStats = {'Strength': 0, 'Intelligence': 0, 'Agility': 0, 'Charisma': 0}
 playerHonour = 0
 
+
+# Randomly generates player stats
 def generate_random_playerStats():
 
     global playerStats
+    statsDict = playerStats.copy()
 
     totalStatsPoints = 12 # The max points that can be shared across player stats
-    baseList = [totalStatsPoints // len(playerStats)]*4 # Avg points per stat (ensure is integer)
 
-    tamperList = [1, 1, 1, 1]
+    sumList = [0]
+    keys = list(statsDict.keys())
 
-    while sum(tamperList) != 0:
-        tamperList[0] = random.randint(-2, 2)
-        tamperList[1] = random.randint(-2, 2)
-        tamperList[2] = random.randint(-2, 2)
-        tamperList[3] = random.randint(-2, 2)
+    while sum(sumList) != totalStatsPoints:
+        statsDict[keys[0]] = random.randint(0, 5)
+        statsDict[keys[1]] = random.randint(0, 5)
+        statsDict[keys[2]] = random.randint(0, 5)
+        statsDict[keys[3]] = random.randint(0, 5)
+        
+        sumList = [statsDict[keys[0]], statsDict[keys[1]], statsDict[keys[2]], statsDict[keys[3]]]
 
-
-    for i in range(len(baseList)):
-        baseList[i] += tamperList[i]
-    
-    pairs = playerStats.items()
-
-    for pair in pairs:
-        pair = list(pair)
-        pair[1] += 2
-        print(pair)
-
-
+    return statsDict
+         
 
 playerStats = generate_random_playerStats()
-print(playerStats)
 
+
+def start_game():
+    close_window()
 
 def create_stats_window():
 
@@ -127,13 +124,22 @@ def create_stats_window():
     
     ttk.Label(WN, text = f'\nHonour: {playerHonour}').pack()
 
+def close_window():
+    WN.destroy()
+
+
+
 # Main window
 WN = tk.Tk()
 WN.geometry('600x400')
 WN.title('Text-based adventure game!')
 
+# Buttons
 statsButton = ttk.Button(WN, text = "Open player stats", command = create_stats_window)
 statsButton.pack(expand = True)
+
+startButton = ttk.Button(WN, text = "Start a new adventure", command = start_game)
+startButton.pack(expand = True)
 
 # Run
 WN.mainloop()
